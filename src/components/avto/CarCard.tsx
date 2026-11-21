@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { Check, Fuel, Gauge, GitCompareArrows, Timer, Zap, Cog } from "lucide-react";
 import { BRAND_BY_ID } from "@/data/brands";
 import type { Car } from "@/data/cars";
@@ -8,11 +9,10 @@ import { cn } from "@/lib/utils";
 interface Props {
   car: Car;
   compared: boolean;
-  onOpen: () => void;
   onToggleCompare: () => void;
 }
 
-export function CarCard({ car, compared, onOpen, onToggleCompare }: Props) {
+export function CarCard({ car, compared, onToggleCompare }: Props) {
   const brand = BRAND_BY_ID[car.brand];
   const specs = [
     { icon: Cog, label: "Mühərrik", value: car.cc ? `${(car.cc / 1000).toFixed(1)} L` : "Elektrik" },
@@ -29,7 +29,7 @@ export function CarCard({ car, compared, onOpen, onToggleCompare }: Props) {
         compared && "border-primary/70 ring-1 ring-primary/40",
       )}
     >
-      <button onClick={onOpen} className="relative block aspect-[16/10] overflow-hidden bg-muted" aria-label={`${brand.name} ${car.model} ${car.generation} — ətraflı bax`}>
+      <Link to="/avtomobil/$id" params={{ id: car.id }} className="relative block aspect-[16/10] overflow-hidden bg-muted" aria-label={`${brand.name} ${car.model} ${car.generation} — ətraflı bax`}>
         <SmartImage
           srcs={car.images}
           alt={`${brand.name} ${car.model} ${car.generation}`}
@@ -52,10 +52,10 @@ export function CarCard({ car, compared, onOpen, onToggleCompare }: Props) {
         <span className="absolute bottom-3 right-3 rounded-md bg-background/80 px-2 py-0.5 font-mono text-[11px] backdrop-blur">
           {car.images.length} foto
         </span>
-      </button>
+      </Link>
 
       <div className="flex flex-1 flex-col p-4">
-        <button onClick={onOpen} className="text-left">
+        <Link to="/avtomobil/$id" params={{ id: car.id }} className="text-left">
           <p className="text-xs font-medium text-muted-foreground">{brand.name}</p>
           <h3 className="mt-0.5 text-base font-bold leading-tight">
             {car.model} <span className="text-primary">{car.generation}</span>
@@ -63,7 +63,7 @@ export function CarCard({ car, compared, onOpen, onToggleCompare }: Props) {
           <p className="mt-1 font-mono text-xs text-muted-foreground">
             {years(car)} · {car.trim} · {car.body}
           </p>
-        </button>
+        </Link>
 
         <dl className="mt-4 grid grid-cols-5 gap-1 border-t border-border pt-3">
           {specs.map((s) => (

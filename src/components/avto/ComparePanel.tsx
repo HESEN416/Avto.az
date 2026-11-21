@@ -1,4 +1,5 @@
-import { GitCompareArrows, Plus, Trash2, Trophy, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Plus, Trash2, Trophy, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -16,13 +17,7 @@ import { SPEC_GROUPS, bestIndex } from "@/lib/specs";
 import { SmartImage } from "./SmartImage";
 import { cn } from "@/lib/utils";
 
-interface Props {
-  ids: string[];
-  onAdd: (id: string) => void;
-  onRemove: (id: string) => void;
-  onClear: () => void;
-  onOpen: (id: string) => void;
-}
+import { useAvtoStore } from "@/lib/avto-store";
 
 function AddSlot({ ids, onAdd }: { ids: string[]; onAdd: (id: string) => void }) {
   return (
@@ -51,24 +46,21 @@ function AddSlot({ ids, onAdd }: { ids: string[]; onAdd: (id: string) => void })
   );
 }
 
-export function ComparePanel({ ids, onAdd, onRemove, onClear, onOpen }: Props) {
+export function ComparePanel() {
+  const { compareIds: ids, toggle, clearCompare: onClear } = useAvtoStore();
+  const onAdd = toggle;
+  const onRemove = toggle;
   const cars = ids.map((id) => CAR_BY_ID[id]).filter(Boolean);
   const slots = Math.min(MAX_COMPARE, Math.max(MIN_COMPARE, cars.length + 1));
   const cols = { gridTemplateColumns: `minmax(140px,1fr) repeat(${slots}, minmax(180px,1.2fr))` };
 
   return (
-    <div id="muqayise" className="mt-20">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="eyebrow">Müqayisə aləti</p>
-          <h2 className="mt-3 flex items-center gap-3 text-2xl font-bold sm:text-3xl">
-            <GitCompareArrows className="h-7 w-7 text-primary" /> Yan-yana müqayisə
-          </h2>
-          <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-            İstənilən marka və ildən {MIN_COMPARE}–{MAX_COMPARE} avtomobil seçin. Ən yaxşı göstərici{" "}
-            <span className="text-success">yaşıl</span> rənglə işarələnir.
-          </p>
-        </div>
+    <div>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <p className="max-w-xl text-sm text-muted-foreground">
+          İstənilən marka və ildən {MIN_COMPARE}–{MAX_COMPARE} avtomobil seçin. Ən yaxşı göstərici{" "}
+          <span className="text-success">yaşıl</span> rənglə işarələnir.
+        </p>
         {cars.length > 0 && (
           <Button variant="ghost" size="sm" onClick={onClear}>
             <Trash2 /> Hamısını təmizlə
@@ -98,7 +90,7 @@ export function ComparePanel({ ids, onAdd, onRemove, onClear, onOpen }: Props) {
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
-                  <button onClick={() => onOpen(car.id)} className="block w-full text-left">
+                  <Link to="/avtomobil/$id" params={{ id: car.id }} className="block w-full text-left">
                     <div className="aspect-[16/10] overflow-hidden bg-muted">
                       <SmartImage srcs={car.images} alt={`${brand.name} ${car.model} ${car.generation}`} className="h-full w-full object-cover" />
                     </div>
@@ -109,7 +101,7 @@ export function ComparePanel({ ids, onAdd, onRemove, onClear, onOpen }: Props) {
                       </p>
                       <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">{years(car)}</p>
                     </div>
-                  </button>
+                  </Link>
                 </div>
               );
             })}
@@ -117,7 +109,7 @@ export function ComparePanel({ ids, onAdd, onRemove, onClear, onOpen }: Props) {
 
           {cars.length < MIN_COMPARE && (
             <p className="border-b border-border px-4 py-3 text-center text-sm text-muted-foreground">
-              Müqayisə üçün ən azı {MIN_COMPARE} avtomobil seçin — kataloqdakı “Müqayisə et” düyməsi və ya yuxarıdakı siyahı ilə.
+              Müqayisə üçün ən azı {MIN_COMPARE} avtomobil seçin — kataloqdakı “Müqayisə et” düyməsi və ya yuxarıdakı “Avtomobil əlavə et” siyahısı ilə.
             </p>
           )}
 

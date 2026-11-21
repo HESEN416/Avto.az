@@ -10,33 +10,74 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as KataloqRouteImport } from './routes/kataloq'
+import { Route as MarkalarRouteImport } from './routes/markalar'
+import { Route as MuqayiseRouteImport } from './routes/muqayise'
+import { Route as AvtomobilIdRouteImport } from './routes/avtomobil.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KataloqRoute = KataloqRouteImport.update({
+  id: '/kataloq',
+  path: '/kataloq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarkalarRoute = MarkalarRouteImport.update({
+  id: '/markalar',
+  path: '/markalar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MuqayiseRoute = MuqayiseRouteImport.update({
+  id: '/muqayise',
+  path: '/muqayise',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AvtomobilIdRoute = AvtomobilIdRouteImport.update({
+  id: '/avtomobil/$id',
+  path: '/avtomobil/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/kataloq': typeof KataloqRoute
+  '/markalar': typeof MarkalarRoute
+  '/muqayise': typeof MuqayiseRoute
+  '/avtomobil/$id': typeof AvtomobilIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/kataloq': typeof KataloqRoute
+  '/markalar': typeof MarkalarRoute
+  '/muqayise': typeof MuqayiseRoute
+  '/avtomobil/$id': typeof AvtomobilIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/kataloq': typeof KataloqRoute
+  '/markalar': typeof MarkalarRoute
+  '/muqayise': typeof MuqayiseRoute
+  '/avtomobil/$id': typeof AvtomobilIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/kataloq' | '/markalar' | '/muqayise' | '/avtomobil/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/kataloq' | '/markalar' | '/muqayise' | '/avtomobil/$id'
+  id:
+    '__root__' | '/' | '/kataloq' | '/markalar' | '/muqayise' | '/avtomobil/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  KataloqRoute: typeof KataloqRoute
+  MarkalarRoute: typeof MarkalarRoute
+  MuqayiseRoute: typeof MuqayiseRoute
+  AvtomobilIdRoute: typeof AvtomobilIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +89,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kataloq': {
+      id: '/kataloq'
+      path: '/kataloq'
+      fullPath: '/kataloq'
+      preLoaderRoute: typeof KataloqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/markalar': {
+      id: '/markalar'
+      path: '/markalar'
+      fullPath: '/markalar'
+      preLoaderRoute: typeof MarkalarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/muqayise': {
+      id: '/muqayise'
+      path: '/muqayise'
+      fullPath: '/muqayise'
+      preLoaderRoute: typeof MuqayiseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/avtomobil/$id': {
+      id: '/avtomobil/$id'
+      path: '/avtomobil/$id'
+      fullPath: '/avtomobil/$id'
+      preLoaderRoute: typeof AvtomobilIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  KataloqRoute: KataloqRoute,
+  MarkalarRoute: MarkalarRoute,
+  MuqayiseRoute: MuqayiseRoute,
+  AvtomobilIdRoute: AvtomobilIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

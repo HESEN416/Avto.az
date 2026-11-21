@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
   type ErrorComponentProps,
@@ -12,6 +13,11 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
+import { Button } from "@/components/ui/button";
+import { Header } from "@/components/avto/Header";
+import { AvtoStoreProvider, useAvtoStore } from "@/lib/avto-store";
+import { MAX_COMPARE } from "@/lib/catalog";
+import { GitCompareArrows } from "lucide-react";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -130,8 +136,47 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
-      <Toaster position="bottom-center" />
+      <AvtoStoreProvider>
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+          <SiteFooter />
+        </div>
+        <CompareFab />
+        <Toaster position="bottom-center" />
+      </AvtoStoreProvider>
     </QueryClientProvider>
+  );
+}
+
+function SiteFooter() {
+  return (
+    <footer className="border-t border-border">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-8 text-xs text-muted-foreground sm:px-6">
+        <span className="font-display font-bold text-foreground">
+          Avto<span className="text-primary">.az</span>
+        </span>
+        <span>Məlumat və texniki ensiklopediya kataloqu. Göstəricilər təxminidir və versiyadan asılı dəyişə bilər.</span>
+        <span>Fotolar: Wikimedia Commons</span>
+      </div>
+    </footer>
+  );
+}
+
+/** Floating shortcut to the compare page while cars are selected. */
+function CompareFab() {
+  const { compareIds } = useAvtoStore();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  if (compareIds.length === 0 || pathname === "/muqayise") return null;
+  return (
+    <div className="fixed bottom-5 left-1/2 z-30 -translate-x-1/2 animate-in slide-in-from-bottom-4">
+      <Button variant="hero" size="lg" className="rounded-full" asChild>
+        <Link to="/muqayise">
+          <GitCompareArrows /> Müqayisəyə bax ({compareIds.length}/{MAX_COMPARE})
+        </Link>
+      </Button>
+    </div>
   );
 }

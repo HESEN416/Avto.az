@@ -1,19 +1,14 @@
 import { useState } from "react";
 import { ArrowRight, Compass, Gauge, Timer, Zap, Fuel, Calendar } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { BRANDS, BRAND_BY_ID, type BrandId } from "@/data/brands";
+import { BRANDS, BRAND_BY_ID } from "@/data/brands";
 import { CARS, CAR_BY_ID, type Car } from "@/data/cars";
 import { displacement, years } from "@/lib/catalog";
 import { SmartImage } from "./SmartImage";
-import { scrollToSection } from "./Header";
 import { cn } from "@/lib/utils";
 
 const FEATURED = ["mb-w223", "porsche-992", "bmw-e30", "rr-cullinan", "byd-seal"];
-
-interface Props {
-  onOpenCar: (id: string) => void;
-  onPickBrand: (brand: BrandId) => void;
-}
 
 function Stat({ icon: Icon, label, value }: { icon: typeof Gauge; label: string; value: string }) {
   return (
@@ -27,13 +22,13 @@ function Stat({ icon: Icon, label, value }: { icon: typeof Gauge; label: string;
   );
 }
 
-export function ShowcaseSection({ onOpenCar, onPickBrand }: Props) {
+export function HomeHero() {
   const [featuredId, setFeaturedId] = useState(FEATURED[0]);
   const car: Car = CAR_BY_ID[featuredId];
   const brand = BRAND_BY_ID[car.brand];
 
   return (
-    <section id="vitrin" className="relative overflow-hidden">
+    <section className="relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-hero" />
 
@@ -52,11 +47,15 @@ export function ShowcaseSection({ onOpenCar, onPickBrand }: Props) {
               performans göstəriciləri, ölçülər və hər modelin qısa tarixçəsi — bir yerdə.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button variant="hero" size="xl" onClick={() => scrollToSection("kataloq")}>
-                Kataloqa bax <ArrowRight />
+              <Button variant="hero" size="xl" asChild>
+                <Link to="/kataloq">
+                  Kataloqa bax <ArrowRight />
+                </Link>
               </Button>
-              <Button variant="glass" size="xl" onClick={() => scrollToSection("markalar")}>
-                <Compass /> Markaları kəşf et
+              <Button variant="glass" size="xl" asChild>
+                <Link to="/markalar">
+                  <Compass /> Markaları kəşf et
+                </Link>
               </Button>
             </div>
             <dl className="mt-10 grid max-w-md grid-cols-3 gap-6 border-t border-border pt-6">
@@ -78,8 +77,9 @@ export function ShowcaseSection({ onOpenCar, onPickBrand }: Props) {
           {/* Right: featured car */}
           <div className="animate-rise [animation-delay:120ms]">
             <div className="surface overflow-hidden">
-              <button
-                onClick={() => onOpenCar(car.id)}
+              <Link
+                to="/avtomobil/$id"
+                params={{ id: car.id }}
                 className="group relative block aspect-[16/10] w-full overflow-hidden bg-muted"
                 aria-label={`${brand.name} ${car.model} ${car.generation} — ətraflı bax`}
               >
@@ -94,7 +94,7 @@ export function ShowcaseSection({ onOpenCar, onPickBrand }: Props) {
                 <span className="absolute left-4 top-4 rounded-full border border-border bg-background/70 px-3 py-1 font-mono text-[11px] uppercase tracking-wider backdrop-blur">
                   Seçilmiş model
                 </span>
-              </button>
+              </Link>
               <div className="p-5 sm:p-6">
                 <div className="flex flex-wrap items-end justify-between gap-3">
                   <div>
@@ -103,8 +103,10 @@ export function ShowcaseSection({ onOpenCar, onPickBrand }: Props) {
                       {car.model} <span className="text-primary">{car.generation}</span>
                     </h2>
                   </div>
-                  <Button variant="glass" size="sm" onClick={() => onOpenCar(car.id)}>
-                    Ətraflı bax <ArrowRight />
+                  <Button variant="glass" size="sm" asChild>
+                    <Link to="/avtomobil/$id" params={{ id: car.id }}>
+                      Ətraflı bax <ArrowRight />
+                    </Link>
                   </Button>
                 </div>
                 <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
@@ -140,47 +142,6 @@ export function ShowcaseSection({ onOpenCar, onPickBrand }: Props) {
           </div>
         </div>
 
-        {/* Brand quick picks */}
-        <div id="markalar" className="mt-20">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="eyebrow">Markalar</p>
-              <h2 className="mt-3 text-2xl font-bold sm:text-3xl">10 markanı sürətli seç</h2>
-            </div>
-            <p className="max-w-sm text-sm text-muted-foreground">
-              Markaya kliklədikdə kataloq yalnız həmin markanın modelləri ilə filtrlənir.
-            </p>
-          </div>
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {BRANDS.map((b) => {
-              const hero = CAR_BY_ID[b.heroCar];
-              const count = CARS.filter((c) => c.brand === b.id).length;
-              return (
-                <button
-                  key={b.id}
-                  onClick={() => onPickBrand(b.id)}
-                  className="group surface relative aspect-[4/3] overflow-hidden text-left transition-all hover:-translate-y-1 hover:border-primary/60"
-                >
-                  <SmartImage
-                    srcs={hero.images}
-                    alt={`${b.name} ${hero.model}`}
-                    className="absolute inset-0 h-full w-full object-cover opacity-70 transition-all duration-500 group-hover:scale-110 group-hover:opacity-90"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-                  <div className="relative flex h-full flex-col justify-end p-3.5">
-                    <span className="font-display text-sm font-bold sm:text-base">{b.name}</span>
-                    <span className="mt-0.5 text-[11px] text-muted-foreground">
-                      {b.country} · {b.founded}
-                    </span>
-                    <span className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-primary">
-                      {count} model <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
       </div>
     </section>
   );
