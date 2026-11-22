@@ -1,46 +1,146 @@
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Archive, BookOpenCheck, Gauge } from "lucide-react";
+import { BRAND_BY_ID, type BrandId } from "@/data/brands";
+import type { Era } from "@/data/cars";
+import { useAvtoStore } from "@/lib/avto-store";
+import { cn } from "@/lib/utils";
 
-const POINTS = [
+type Item =
+  | { kind: "route"; label: string; to: "/kataloq" | "/markalar" | "/muqayise" }
+  | { kind: "anchor"; label: string; href: string }
+  | { kind: "brand"; label: string; brand: BrandId }
+  | { kind: "era"; label: string; era: Era }
+  | { kind: "text"; label: string };
+
+const COLUMNS: { title: string; items: Item[] }[] = [
   {
-    icon: Gauge,
-    title: "Dəqiq Zavod Göstəriciləri",
-    text: "Mühərrik həcmi, at gücü, sürətlənmə və texniki parametrlər.",
+    title: "LAYİHƏ",
+    items: [
+      { kind: "anchor", label: "Haqqımızda", href: "#haqqimizda" },
+      { kind: "anchor", label: "Məqsədimiz", href: "#meqsedimiz" },
+      { kind: "route", label: "Kataloq", to: "/kataloq" },
+      { kind: "route", label: "Müqayisə", to: "/muqayise" },
+    ],
   },
   {
-    icon: Archive,
-    title: "Klassik və Müasir Arxiv",
-    text: "Əfsanəvi retro nəsillərdən ən yeni elektrik modellərinə qədər vahid baza.",
+    title: "MARKALAR",
+    items: (["mercedes", "bmw", "audi", "porsche", "byd"] as BrandId[]).map((b) => ({
+      kind: "brand" as const,
+      brand: b,
+      label: BRAND_BY_ID[b].name,
+    })),
   },
   {
-    icon: BookOpenCheck,
-    title: "100% Məlumat Yönümlü",
-    text: "Satış, elan və reklam olmadan yalnız təmiz ensiklopedik məlumat və müqayisə imkanı.",
+    title: "BÖLMƏLƏR",
+    items: [
+      { kind: "era", label: "Klassik modellər", era: "klassik" },
+      { kind: "era", label: "Yeni nəsillər", era: "yeni" },
+      { kind: "route", label: "Texniki göstəricilər", to: "/kataloq" },
+      { kind: "route", label: "Foto qalereya", to: "/markalar" },
+    ],
+  },
+  {
+    title: "QAYDALAR",
+    items: [
+      { kind: "text", label: "Məlumat məqsədi" },
+      { kind: "text", label: "Məxfilik" },
+      { kind: "text", label: "İstifadə şərtləri" },
+      { kind: "text", label: "Əlaqə" },
+    ],
   },
 ];
 
+const ICONS = [
+  { icon: Gauge, label: "Dəqiq zavod göstəriciləri" },
+  { icon: Archive, label: "Klassik və müasir arxiv" },
+  { icon: BookOpenCheck, label: "100% məlumat yönümlü" },
+];
+
+const ITEM_CLS = "text-sm text-muted-foreground transition-colors hover:text-primary";
+
+function CatalogItem({ item }: { item: Item }) {
+  const { resetFilters } = useAvtoStore();
+  const navigate = useNavigate();
+
+  const openCatalog = (patch: { brand?: BrandId; era?: Era }) => {
+    resetFilters(patch);
+    navigate({ to: "/kataloq" });
+  };
+
+  if (item.kind === "route") {
+    return (
+      <Link to={item.to} className={ITEM_CLS}>
+        {item.label}
+      </Link>
+    );
+  }
+
+  if (item.kind === "anchor") {
+    return (
+      <a href={item.href} className={ITEM_CLS}>
+        {item.label}
+      </a>
+    );
+  }
+
+  if (item.kind === "brand") {
+    return (
+      <button type="button" onClick={() => openCatalog({ brand: item.brand })} className={cn(ITEM_CLS, "text-left")}>
+        {item.label}
+      </button>
+    );
+  }
+
+  if (item.kind === "era") {
+    return (
+      <button type="button" onClick={() => openCatalog({ era: item.era })} className={cn(ITEM_CLS, "text-left")}>
+        {item.label}
+      </button>
+    );
+  }
+
+  return <span className={ITEM_CLS}>{item.label}</span>;
+}
+
+/** Home page only: dark, logo-free, four-column info block under the hero. */
 export function AboutSection() {
   return (
-    <section id="haqqimizda" className="border-t border-border bg-card/30">
+    <section id="haqqimizda" className="dark scroll-mt-20 border-t border-border bg-about text-foreground">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-        <div className="grid gap-8 lg:grid-cols-[1fr_1.6fr] lg:items-start">
-          <div>
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.9fr)] lg:gap-14">
+          <div id="meqsedimiz" className="scroll-mt-24">
             <p className="eyebrow">Haqqımızda</p>
-            <h2 className="mt-3 text-2xl font-bold sm:text-3xl">Avto.az Haqqında</h2>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Avto.az — qlobal avtomobil sənayesinin klassik və müasir modellərini bir araya gətirən müstəqil
-              texniki ensiklopediya və məlumat kataloqudur. Məqsədimiz istifadəçilərə heç bir satış və reklam
-              yönümlü müdaxilə olmadan dəqiq zavod göstəriciləri, mühərrik xüsusiyyətləri, nəsillərin tarixçəsi
-              və real foto arxivləri təqdim etməkdir.
+            <h2 className="mt-3 text-2xl font-bold sm:text-3xl">Avto.az haqqında</h2>
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Avto.az — klassik və müasir avtomobil modellərinin texniki göstəricilərini, nəsillərini və zavod foto
+              arxivini bir araya gətirən məlumat kataloqudur.
             </p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-3">
-            {POINTS.map((p) => (
-              <div key={p.title} className="surface p-5 transition-colors hover:border-primary/50">
-                <span className="grid h-10 w-10 place-items-center rounded-lg bg-primary/15 text-primary">
-                  <p.icon className="h-5 w-5" />
+            <div className="mt-6 flex items-center gap-3">
+              {ICONS.map(({ icon: Icon, label }) => (
+                <span
+                  key={label}
+                  role="img"
+                  aria-label={label}
+                  title={label}
+                  className="grid h-10 w-10 place-items-center rounded-full bg-about-panel text-primary ring-1 ring-border"
+                >
+                  <Icon className="h-4.5 w-4.5" />
                 </span>
-                <h3 className="mt-4 font-sans text-base font-semibold">{p.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.text}</p>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
+            {COLUMNS.map((col) => (
+              <div key={col.title}>
+                <h3 className="font-mono text-[11px] font-semibold tracking-[0.18em] text-primary">{col.title}</h3>
+                <ul className="mt-4 space-y-2.5">
+                  {col.items.map((item) => (
+                    <li key={item.label}>
+                      <CatalogItem item={item} />
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
