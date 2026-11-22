@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { BRANDS, BRAND_BY_ID } from "@/data/brands";
-import { CARS, CAR_BY_ID } from "@/data/cars";
+import { CARS, CAR_BY_ID, type Car } from "@/data/cars";
 import { MAX_COMPARE, MIN_COMPARE, years } from "@/lib/catalog";
 import { SPEC_GROUPS, bestIndex } from "@/lib/specs";
 import { SmartImage } from "./SmartImage";
@@ -50,7 +50,7 @@ export function ComparePanel() {
   const { compareIds: ids, toggle, clearCompare: onClear } = useAvtoStore();
   const onAdd = toggle;
   const onRemove = toggle;
-  const cars = ids.map((id) => CAR_BY_ID[id]).filter(Boolean);
+  const cars = ids.map((id) => CAR_BY_ID[id]).filter((c): c is Car => !!c);
   const slots = Math.min(MAX_COMPARE, Math.max(MIN_COMPARE, cars.length + 1));
   const cols = { gridTemplateColumns: `minmax(140px,1fr) repeat(${slots}, minmax(180px,1.2fr))` };
 

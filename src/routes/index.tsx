@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { HomeHero } from "@/components/avto/HomeHero";
+import { AboutSection } from "@/components/avto/AboutSection";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,5 +17,14 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: HomeHero,
+  component: HomePage,
 });
+
+function HomePage() {
+  return (
+    <>
+      <HomeHero />
+      <AboutSection />
+    </>
+  );
+}

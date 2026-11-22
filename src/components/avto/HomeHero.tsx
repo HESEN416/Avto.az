@@ -23,8 +23,8 @@ function Stat({ icon: Icon, label, value }: { icon: typeof Gauge; label: string;
 }
 
 export function HomeHero() {
-  const [featuredId, setFeaturedId] = useState(FEATURED[0]);
-  const car: Car = CAR_BY_ID[featuredId];
+  const [featuredId, setFeaturedId] = useState<string>("mb-w223");
+  const car: Car = CAR_BY_ID[featuredId] ?? CARS[0]!;
   const brand = BRAND_BY_ID[car.brand];
 
   return (
@@ -114,7 +114,7 @@ export function HomeHero() {
                   <Stat icon={Zap} label="Güc" value={`${car.hp} a.g.`} />
                   <Stat icon={Timer} label="0–100 km/s" value={`${car.acc} san`} />
                   <Stat icon={Gauge} label="Maks. sürət" value={`${car.vmax} km/s`} />
-                  <Stat icon={Fuel} label="Mühərrik" value={displacement(car).split(" · ")[0]} />
+                  <Stat icon={Fuel} label="Mühərrik" value={displacement(car).split(" · ")[0] ?? ""} />
                   <Stat icon={Fuel} label="Yanacaq" value={car.fuel} />
                 </div>
               </div>
@@ -122,6 +122,7 @@ export function HomeHero() {
             <div className="mt-3 flex gap-2 overflow-x-auto pb-1 scrollbar-thin" role="tablist" aria-label="Seçilmiş modellər">
               {FEATURED.map((id) => {
                 const c = CAR_BY_ID[id];
+                if (!c) return null;
                 return (
                   <button
                     key={id}

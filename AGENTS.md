@@ -28,3 +28,8 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Catalog filters, sort and the compare list live in `AvtoStoreProvider` (src/lib/avto-store.tsx) mounted in `__root`, so they survive navigation between pages; compare ids persist in localStorage.
+- Car data is static (src/data/cars.ts + car-images.json from Wikimedia Commons); every photo renders through `SmartImage`, which falls back through other photos to /images/fallback-car.jpg.
+- Pure catalog rules (filtering, dependent selects, compare limit) live in src/lib/catalog.ts and are covered by src/test/catalog.test.ts.

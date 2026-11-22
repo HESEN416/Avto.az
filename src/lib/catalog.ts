@@ -108,7 +108,7 @@ export function years(c: Car): string {
 }
 
 export function displacement(c: Car): string {
-  return c.cc ? `${(c.cc / 1000).toFixed(1)} L · ${c.cc.toLocaleString("az")} sm³` : "Elektrik";
+  return c.cc ? `${(c.cc / 1000).toFixed(1)} L · ${fmt(c.cc)} sm³` : "Elektrik";
 }
 
 export function consumption(c: Car): string {

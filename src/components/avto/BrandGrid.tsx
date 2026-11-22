@@ -14,6 +14,7 @@ export function BrandGrid() {
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
       {BRANDS.map((b) => {
         const hero = CAR_BY_ID[b.heroCar];
+        if (!hero) return null;
         const cars = CARS.filter((c) => c.brand === b.id);
         const models = new Set(cars.map((c) => c.model)).size;
         const span = `${Math.min(...cars.map((c) => c.from))}–${cars.some((c) => !c.to) ? "hazırda" : Math.max(...cars.map((c) => c.to ?? 0))}`;

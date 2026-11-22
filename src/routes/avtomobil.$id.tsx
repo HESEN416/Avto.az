@@ -42,5 +42,7 @@ export const Route = createFileRoute("/avtomobil/$id")({
 
 function CarPage() {
   const { id } = Route.useLoaderData();
-  return <CarDetail car={CAR_BY_ID[id]} />;
+  const car = CAR_BY_ID[id];
+  if (!car) return null;
+  return <CarDetail car={car} />;
 }

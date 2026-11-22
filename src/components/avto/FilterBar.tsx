@@ -42,7 +42,7 @@ function FilterSelect<T extends string>({
   label: string;
 }) {
   return (
-    <Select value={value || ALL} onValueChange={(v) => onChange(v === ALL ? "" : (v as T))} disabled={disabled}>
+    <Select value={value || ALL} onValueChange={(v) => onChange(v === ALL ? "" : (v as T))} disabled={disabled ?? false}>
       <SelectTrigger className="h-10 bg-secondary/50" aria-label={label}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
@@ -155,7 +155,7 @@ export function FilterBar({ filters, onChange, onReset }: Props) {
               max={HP_LIMITS.max}
               step={10}
               value={[filters.hpMin, filters.hpMax]}
-              onValueChange={([a, b]) => onChange({ hpMin: a, hpMax: b })}
+              onValueChange={([a, b]) => onChange({ hpMin: a ?? HP_LIMITS.min, hpMax: b ?? HP_LIMITS.max })}
               aria-label="At gücü aralığı"
             />
             <span className="shrink-0 font-mono text-xs font-semibold">
