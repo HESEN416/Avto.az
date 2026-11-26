@@ -5,6 +5,7 @@ import type { Car } from "@/data/cars";
 import { consumption, years } from "@/lib/catalog";
 import { SmartImage } from "./SmartImage";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 
 interface Props {
   car: Car;
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function CarCard({ car, compared, onToggleCompare }: Props) {
+  const { t, tv } = useT();
   const brand = BRAND_BY_ID[car.brand];
   const specs = [
     { icon: Cog, label: "Mühərrik", value: car.cc ? `${(car.cc / 1000).toFixed(1)} L` : "Elektrik" },
@@ -29,7 +31,7 @@ export function CarCard({ car, compared, onToggleCompare }: Props) {
         compared && "border-primary/70 ring-1 ring-primary/40",
       )}
     >
-      <Link to="/avtomobil/$id" params={{ id: car.id }} className="relative block aspect-[16/10] overflow-hidden bg-muted" aria-label={`${brand.name} ${car.model} ${car.generation} — ətraflı bax`}>
+      <Link to="/avtomobil/$id" params={{ id: car.id }} className="relative block aspect-[16/10] overflow-hidden bg-muted" aria-label={`${brand.name} ${car.model} ${car.generation} — ${t("ətraflı bax")}`}>
         <SmartImage
           srcs={car.images}
           alt={`${brand.name} ${car.model} ${car.generation}`}
@@ -38,7 +40,7 @@ export function CarCard({ car, compared, onToggleCompare }: Props) {
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-photo-fade" />
         <div className="absolute left-3 top-3 flex gap-1.5">
           <span className="rounded-full bg-background/80 px-2.5 py-0.5 text-[11px] font-medium backdrop-blur">
-            {car.era === "klassik" ? "Klassik" : "Yeni nəsil"}
+            {t(car.era === "klassik" ? "Klassik" : "Yeni nəsil")}
           </span>
           <span
             className={cn(
@@ -46,11 +48,11 @@ export function CarCard({ car, compared, onToggleCompare }: Props) {
               car.fuel === "Elektrik" ? "bg-success/20 text-success" : car.fuel === "Hibrid" ? "bg-warning/20 text-warning" : "bg-background/80",
             )}
           >
-            {car.fuel}
+            {t(car.fuel)}
           </span>
         </div>
         <span className="absolute bottom-3 right-3 rounded-md bg-background/80 px-2 py-0.5 font-mono text-[11px] backdrop-blur">
-          {car.images.length} foto
+          {t("{n} foto", { n: car.images.length })}
         </span>
       </Link>
 
@@ -61,7 +63,7 @@ export function CarCard({ car, compared, onToggleCompare }: Props) {
             {car.model} <span className="text-primary">{car.generation}</span>
           </h3>
           <p className="mt-1 font-mono text-xs text-muted-foreground">
-            {years(car)} · {car.trim} · {car.body}
+            {tv(years(car))} · {car.trim} · {t(car.body)}
           </p>
         </Link>
 
@@ -69,8 +71,8 @@ export function CarCard({ car, compared, onToggleCompare }: Props) {
           {specs.map((s) => (
             <div key={s.label} className="min-w-0 text-center">
               <s.icon className="mx-auto h-3.5 w-3.5 text-primary" />
-              <dd className="mt-1 truncate font-mono text-[11px] font-semibold">{s.value}</dd>
-              <dt className="truncate text-[10px] text-muted-foreground">{s.label}</dt>
+              <dd className="mt-1 truncate font-mono text-[11px] font-semibold">{tv(s.value)}</dd>
+              <dt className="truncate text-[10px] text-muted-foreground">{t(s.label)}</dt>
             </div>
           ))}
         </dl>
@@ -86,7 +88,7 @@ export function CarCard({ car, compared, onToggleCompare }: Props) {
           )}
         >
           {compared ? <Check className="h-4 w-4" /> : <GitCompareArrows className="h-4 w-4" />}
-          {compared ? "Müqayisədədir" : "Müqayisə et"}
+          {t(compared ? "Müqayisədədir" : "Müqayisə et")}
         </button>
       </div>
     </article>

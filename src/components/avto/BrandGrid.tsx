@@ -4,11 +4,13 @@ import { BRANDS } from "@/data/brands";
 import { CARS, CAR_BY_ID } from "@/data/cars";
 import { useAvtoStore } from "@/lib/avto-store";
 import { SmartImage } from "./SmartImage";
+import { useT } from "@/lib/i18n";
 
 /** Brand cards; picking one opens the catalog filtered to that brand. */
 export function BrandGrid() {
   const { resetFilters } = useAvtoStore();
   const navigate = useNavigate();
+  const { t, tv } = useT();
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
@@ -36,13 +38,13 @@ export function BrandGrid() {
             <div className="relative flex h-full flex-col justify-end p-4">
               <span className="font-display text-lg font-bold">{b.name}</span>
               <span className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                <MapPin className="h-3 w-3" /> {b.hq}, {b.country} · {b.founded}
+                <MapPin className="h-3 w-3" /> {t(b.hq)}, {t(b.country)} · {b.founded}
               </span>
               <span className="mt-1 font-mono text-[11px] text-muted-foreground">
-                {models} model · {cars.length} nəsil · {span}
+                {t("{m} model · {g} nəsil · {s}", { m: models, g: cars.length, s: tv(span) })}
               </span>
               <span className="mt-3 inline-flex w-fit items-center gap-1 rounded-full bg-primary/15 px-2.5 py-1 font-mono text-[11px] font-semibold text-primary">
-                Kataloqda bax <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                {t("Kataloqda bax")} <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
               </span>
             </div>
           </button>

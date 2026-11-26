@@ -9,6 +9,7 @@ import { PageIntro } from "@/components/avto/PageIntro";
 import { CARS, type Car } from "@/data/cars";
 import { filterCars } from "@/lib/catalog";
 import { useAvtoStore, type Sort } from "@/lib/avto-store";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/kataloq")({
   head: () => ({
@@ -35,14 +36,15 @@ const PAGE = 16;
 
 function CatalogPage() {
   const { filters, setFilters, resetFilters, sort, setSort, compareIds, toggle } = useAvtoStore();
+  const { t } = useT();
   const [limit, setLimit] = useState(PAGE);
   const results = useMemo(() => [...filterCars(CARS, filters)].sort(SORTS[sort].fn), [filters, sort]);
   const visible = results.slice(0, limit);
 
   return (
     <>
-      <PageIntro eyebrow="Kataloq" title="Texniki kataloq">
-        Klassik və yeni nəsil modelləri filtrləyin, karta klikləyərək tam məlumat səhifəsini açın.
+      <PageIntro eyebrow={t("Kataloq")} title={t("Texniki kataloq")}>
+        {t("Klassik və yeni nəsil modelləri filtrləyin, karta klikləyərək tam məlumat səhifəsini açın.")}
       </PageIntro>
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
@@ -57,16 +59,16 @@ function CatalogPage() {
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
           <span className="font-mono text-sm text-muted-foreground">
-            <span className="font-semibold text-foreground">{results.length}</span> nəticə
+            {t("{n} nəticə", { n: results.length })}
           </span>
           <Select value={sort} onValueChange={(v) => setSort(v as Sort)}>
-            <SelectTrigger className="h-9 w-52 bg-secondary/50" aria-label="Sıralama">
+            <SelectTrigger className="h-9 w-52 bg-secondary/50" aria-label={t("Sıralama")}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {Object.entries(SORTS).map(([k, s]) => (
                 <SelectItem key={k} value={k}>
-                  {s.label}
+                  {t(s.label)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -76,10 +78,10 @@ function CatalogPage() {
         {results.length === 0 ? (
           <div className="surface mt-5 flex flex-col items-center justify-center gap-3 px-6 py-20 text-center">
             <SearchX className="h-10 w-10 text-muted-foreground" />
-            <p className="font-display font-bold">Uyğun avtomobil tapılmadı</p>
-            <p className="text-sm text-muted-foreground">Filtrləri genişləndirin və ya sıfırlayın.</p>
+            <p className="font-display font-bold">{t("Uyğun avtomobil tapılmadı")}</p>
+            <p className="text-sm text-muted-foreground">{t("Filtrləri genişləndirin və ya sıfırlayın.")}</p>
             <Button variant="glass" onClick={() => resetFilters()}>
-              Filtrləri sıfırla
+              {t("Filtrləri sıfırla")}
             </Button>
           </div>
         ) : (
@@ -92,7 +94,7 @@ function CatalogPage() {
             {results.length > limit && (
               <div className="mt-8 text-center">
                 <Button variant="glass" size="lg" onClick={() => setLimit((l) => l + PAGE)}>
-                  Daha çox göstər ({results.length - limit})
+                  {t("Daha çox göstər ({n})", { n: results.length - limit })}
                 </Button>
               </div>
             )}

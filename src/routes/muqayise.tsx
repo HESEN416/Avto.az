@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ComparePanel } from "@/components/avto/ComparePanel";
 import { PageIntro } from "@/components/avto/PageIntro";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/muqayise")({
   head: () => ({
@@ -17,9 +18,10 @@ export const Route = createFileRoute("/muqayise")({
 });
 
 function ComparePage() {
+  const { t } = useT();
   return (
     <>
-      <PageIntro eyebrow="Müqayisə aləti" title="Yan-yana müqayisə" />
+      <PageIntro eyebrow={t("Müqayisə aləti")} title={t("Yan-yana müqayisə")} />
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
         <ComparePanel />
       </div>

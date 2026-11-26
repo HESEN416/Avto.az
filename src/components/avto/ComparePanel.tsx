@@ -18,8 +18,10 @@ import { SmartImage } from "./SmartImage";
 import { cn } from "@/lib/utils";
 
 import { useAvtoStore } from "@/lib/avto-store";
+import { useT } from "@/lib/i18n";
 
 function AddSlot({ ids, onAdd }: { ids: string[]; onAdd: (id: string) => void }) {
+  const { t } = useT();
   return (
     <div className="flex h-full min-h-44 flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border p-4 text-center">
       <span className="grid h-10 w-10 place-items-center rounded-full bg-primary/15 text-primary">
@@ -27,7 +29,7 @@ function AddSlot({ ids, onAdd }: { ids: string[]; onAdd: (id: string) => void })
       </span>
       <Select value="" onValueChange={onAdd}>
         <SelectTrigger className="h-9 w-full bg-secondary/50 text-xs">
-          <SelectValue placeholder="Avtomobil əlavə et" />
+          <SelectValue placeholder={t("Avtomobil əlavə et")} />
         </SelectTrigger>
         <SelectContent className="max-h-80">
           {BRANDS.map((b) => (
@@ -48,6 +50,7 @@ function AddSlot({ ids, onAdd }: { ids: string[]; onAdd: (id: string) => void })
 
 export function ComparePanel() {
   const { compareIds: ids, toggle, clearCompare: onClear } = useAvtoStore();
+  const { t, tv } = useT();
   const onAdd = toggle;
   const onRemove = toggle;
   const cars = ids.map((id) => CAR_BY_ID[id]).filter((c): c is Car => !!c);
@@ -58,12 +61,11 @@ export function ComparePanel() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <p className="max-w-xl text-sm text-muted-foreground">
-          İstənilən marka və ildən {MIN_COMPARE}–{MAX_COMPARE} avtomobil seçin. Ən yaxşı göstərici{" "}
-          <span className="text-success">yaşıl</span> rənglə işarələnir.
+          {t("İstənilən marka və ildən {a}–{b} avtomobil seçin. Ən yaxşı göstərici yaşıl rənglə işarələnir.", { a: MIN_COMPARE, b: MAX_COMPARE })}
         </p>
         {cars.length > 0 && (
           <Button variant="ghost" size="sm" onClick={onClear}>
-            <Trash2 /> Hamısını təmizlə
+            <Trash2 /> {t("Hamısını təmizlə")}
           </Button>
         )}
       </div>
@@ -74,7 +76,7 @@ export function ComparePanel() {
           <div className="grid gap-3 border-b border-border p-4" style={cols}>
             <div className="flex flex-col justify-end pb-2">
               <span className="font-mono text-xs text-muted-foreground">
-                {cars.length} / {MAX_COMPARE} seçilib
+                {t("{a} / {b} seçilib", { a: cars.length, b: MAX_COMPARE })}
               </span>
             </div>
             {Array.from({ length: slots }, (_, i) => {
@@ -86,7 +88,7 @@ export function ComparePanel() {
                   <button
                     onClick={() => onRemove(car.id)}
                     className="absolute right-2 top-2 z-10 grid h-7 w-7 place-items-center rounded-full bg-background/80 backdrop-blur transition hover:bg-destructive hover:text-destructive-foreground"
-                    aria-label={`${car.model} müqayisədən çıxar`}
+                    aria-label={`${car.model} — ${t("Müqayisədən çıxar")}`}
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
@@ -99,7 +101,7 @@ export function ComparePanel() {
                       <p className="text-sm font-bold leading-tight">
                         {car.model} <span className="text-primary">{car.generation}</span>
                       </p>
-                      <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">{years(car)}</p>
+                      <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">{tv(years(car))}</p>
                     </div>
                   </Link>
                 </div>
@@ -109,19 +111,19 @@ export function ComparePanel() {
 
           {cars.length < MIN_COMPARE && (
             <p className="border-b border-border px-4 py-3 text-center text-sm text-muted-foreground">
-              Müqayisə üçün ən azı {MIN_COMPARE} avtomobil seçin — kataloqdakı “Müqayisə et” düyməsi və ya yuxarıdakı “Avtomobil əlavə et” siyahısı ilə.
+              {t("Müqayisə üçün ən azı {n} avtomobil seçin — kataloqdakı “Müqayisə et” düyməsi və ya yuxarıdakı “Avtomobil əlavə et” siyahısı ilə.", { n: MIN_COMPARE })}
             </p>
           )}
 
           {cars.length > 0 &&
             SPEC_GROUPS.map((g) => (
               <div key={g.title}>
-                <div className="bg-secondary/40 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-primary">{g.title}</div>
+                <div className="bg-secondary/40 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-primary">{t(g.title)}</div>
                 {g.rows.map((row) => {
                   const best = bestIndex(row, cars);
                   return (
                     <div key={row.label} className="grid gap-3 border-b border-border px-4 py-2.5 text-sm last:border-0" style={cols}>
-                      <div className="text-muted-foreground">{row.label}</div>
+                      <div className="text-muted-foreground">{t(row.label)}</div>
                       {Array.from({ length: slots }, (_, i) => {
                         const car = cars[i];
                         const win = best.includes(i);
@@ -130,7 +132,7 @@ export function ComparePanel() {
                             key={i}
                             className={cn("font-mono text-[13px]", win && "flex items-center gap-1.5 font-semibold text-success")}
                           >
-                            {car ? row.value(car) : <span className="text-muted-foreground/50">—</span>}
+                            {car ? t(tv(row.value(car))) : <span className="text-muted-foreground/50">—</span>}
                             {win && <Trophy className="h-3.5 w-3.5 shrink-0" />}
                           </div>
                         );

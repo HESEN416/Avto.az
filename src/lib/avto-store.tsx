@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { toast } from "sonner";
+import { useT } from "./i18n";
 import { EMPTY_FILTERS, MAX_COMPARE, toggleCompare, updateFilters, type Filters } from "./catalog";
 
 export type Sort = "brand" | "newest" | "oldest" | "power" | "accel";
@@ -20,6 +21,7 @@ const COMPARE_KEY = "avto-compare";
 
 /** Catalog filters and the compare list live above the routes so they survive page changes. */
 export function AvtoStoreProvider({ children }: { children: ReactNode }) {
+  const { t } = useT();
   const [filters, setFiltersState] = useState<Filters>(EMPTY_FILTERS);
   const [sort, setSort] = useState<Sort>("brand");
   const [compareIds, setCompareIds] = useState<string[]>([]);
@@ -48,8 +50,8 @@ export function AvtoStoreProvider({ children }: { children: ReactNode }) {
     toggle: (id) => {
       const { ids, rejected } = toggleCompare(compareIds, id);
       if (rejected) {
-        toast.error(`Maksimum ${MAX_COMPARE} avtomobil müqayisə etmək olar`, {
-          description: "Yenisini əlavə etmək üçün birini çıxarın.",
+        toast.error(t("Maksimum {n} avtomobil müqayisə etmək olar", { n: MAX_COMPARE }), {
+          description: t("Yenisini əlavə etmək üçün birini çıxarın."),
         });
         return;
       }

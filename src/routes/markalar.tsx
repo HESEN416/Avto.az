@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BrandGrid } from "@/components/avto/BrandGrid";
 import { PageIntro } from "@/components/avto/PageIntro";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/markalar")({
   head: () => ({
@@ -17,10 +18,11 @@ export const Route = createFileRoute("/markalar")({
 });
 
 function BrandsPage() {
+  const { t } = useT();
   return (
     <>
-      <PageIntro eyebrow="Markalar" title="10 markanı kəşf et">
-        Markaya kliklədikdə kataloq yalnız həmin markanın modelləri ilə açılır.
+      <PageIntro eyebrow={t("Markalar")} title={t("10 markanı kəşf et")}>
+        {t("Markaya kliklədikdə kataloq yalnız həmin markanın modelləri ilə açılır.")}
       </PageIntro>
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
         <BrandGrid />

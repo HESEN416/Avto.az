@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as KataloqRouteImport } from './routes/kataloq'
 import { Route as MarkalarRouteImport } from './routes/markalar'
 import { Route as MuqayiseRouteImport } from './routes/muqayise'
+import { Route as OzNomremRouteImport } from './routes/oz-nomrem'
 import { Route as AvtomobilIdRouteImport } from './routes/avtomobil.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -35,6 +36,11 @@ const MuqayiseRoute = MuqayiseRouteImport.update({
   path: '/muqayise',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OzNomremRoute = OzNomremRouteImport.update({
+  id: '/oz-nomrem',
+  path: '/oz-nomrem',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AvtomobilIdRoute = AvtomobilIdRouteImport.update({
   id: '/avtomobil/$id',
   path: '/avtomobil/$id',
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/kataloq': typeof KataloqRoute
   '/markalar': typeof MarkalarRoute
   '/muqayise': typeof MuqayiseRoute
+  '/oz-nomrem': typeof OzNomremRoute
   '/avtomobil/$id': typeof AvtomobilIdRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/kataloq': typeof KataloqRoute
   '/markalar': typeof MarkalarRoute
   '/muqayise': typeof MuqayiseRoute
+  '/oz-nomrem': typeof OzNomremRoute
   '/avtomobil/$id': typeof AvtomobilIdRoute
 }
 export interface FileRoutesById {
@@ -61,15 +69,34 @@ export interface FileRoutesById {
   '/kataloq': typeof KataloqRoute
   '/markalar': typeof MarkalarRoute
   '/muqayise': typeof MuqayiseRoute
+  '/oz-nomrem': typeof OzNomremRoute
   '/avtomobil/$id': typeof AvtomobilIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/kataloq' | '/markalar' | '/muqayise' | '/avtomobil/$id'
+  fullPaths:
+    | '/'
+    | '/kataloq'
+    | '/markalar'
+    | '/muqayise'
+    | '/oz-nomrem'
+    | '/avtomobil/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/kataloq' | '/markalar' | '/muqayise' | '/avtomobil/$id'
+  to:
+    | '/'
+    | '/kataloq'
+    | '/markalar'
+    | '/muqayise'
+    | '/oz-nomrem'
+    | '/avtomobil/$id'
   id:
-    '__root__' | '/' | '/kataloq' | '/markalar' | '/muqayise' | '/avtomobil/$id'
+    | '__root__'
+    | '/'
+    | '/kataloq'
+    | '/markalar'
+    | '/muqayise'
+    | '/oz-nomrem'
+    | '/avtomobil/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +104,7 @@ export interface RootRouteChildren {
   KataloqRoute: typeof KataloqRoute
   MarkalarRoute: typeof MarkalarRoute
   MuqayiseRoute: typeof MuqayiseRoute
+  OzNomremRoute: typeof OzNomremRoute
   AvtomobilIdRoute: typeof AvtomobilIdRoute
 }
 
@@ -110,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MuqayiseRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/oz-nomrem': {
+      id: '/oz-nomrem'
+      path: '/oz-nomrem'
+      fullPath: '/oz-nomrem'
+      preLoaderRoute: typeof OzNomremRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/avtomobil/$id': {
       id: '/avtomobil/$id'
       path: '/avtomobil/$id'
@@ -125,6 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   KataloqRoute: KataloqRoute,
   MarkalarRoute: MarkalarRoute,
   MuqayiseRoute: MuqayiseRoute,
+  OzNomremRoute: OzNomremRoute,
   AvtomobilIdRoute: AvtomobilIdRoute,
 }
 export const routeTree = rootRouteImport

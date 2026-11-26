@@ -3,6 +3,7 @@ import { CarDetail } from "@/components/avto/CarDetail";
 import { Button } from "@/components/ui/button";
 import { BRAND_BY_ID } from "@/data/brands";
 import { CAR_BY_ID } from "@/data/cars";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/avtomobil/$id")({
   loader: ({ params }) => {
@@ -29,16 +30,21 @@ export const Route = createFileRoute("/avtomobil/$id")({
     };
   },
   component: CarPage,
-  notFoundComponent: () => (
+  notFoundComponent: CarNotFound,
+});
+
+function CarNotFound() {
+  const { t } = useT();
+  return (
     <div className="mx-auto max-w-xl px-4 py-24 text-center">
-      <h1 className="text-2xl font-bold">Avtomobil tapılmadı</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Bu model kataloqda mövcud deyil.</p>
+      <h1 className="text-2xl font-bold">{t("Avtomobil tapılmadı")}</h1>
+      <p className="mt-2 text-sm text-muted-foreground">{t("Bu model kataloqda mövcud deyil.")}</p>
       <Button variant="hero" className="mt-6" asChild>
-        <Link to="/kataloq">Kataloqa qayıt</Link>
+        <Link to="/kataloq">{t("Kataloqa qayıt")}</Link>
       </Button>
     </div>
-  ),
-});
+  );
+}
 
 function CarPage() {
   const { id } = Route.useLoaderData();

@@ -10,9 +10,11 @@ import { useAvtoStore } from "@/lib/avto-store";
 import { SmartImage } from "./SmartImage";
 import { CarCard } from "./CarCard";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 
 export function CarDetail({ car }: { car: Car }) {
   const { compareIds, toggle } = useAvtoStore();
+  const { t, tv, lang } = useT();
   const compared = compareIds.includes(car.id);
   const [index, setIndex] = useState(0);
   const total = car.images.length;
@@ -40,7 +42,7 @@ export function CarDetail({ car }: { car: Car }) {
     <div className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6">
       <Button variant="glass" size="sm" asChild>
         <Link to="/kataloq">
-          <ArrowLeft /> Kataloqa qayıt
+          <ArrowLeft /> {t("Kataloqa qayıt")}
         </Link>
       </Button>
 
@@ -59,14 +61,14 @@ export function CarDetail({ car }: { car: Car }) {
               <button
                 onClick={() => setIndex((i) => (i - 1 + total) % total)}
                 className="absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-border bg-background/80 backdrop-blur transition hover:bg-background"
-                aria-label="Əvvəlki foto"
+                aria-label={t("Əvvəlki foto")}
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
               <button
                 onClick={() => setIndex((i) => (i + 1) % total)}
                 className="absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-border bg-background/80 backdrop-blur transition hover:bg-background"
-                aria-label="Növbəti foto"
+                aria-label={t("Növbəti foto")}
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
@@ -92,22 +94,22 @@ export function CarDetail({ car }: { car: Car }) {
           ))}
         </div>
       </div>
-      <p className="mt-2 text-[11px] text-muted-foreground">Fotolar: Wikimedia Commons</p>
+      <p className="mt-2 text-[11px] text-muted-foreground">{t("Fotolar: Wikimedia Commons")}</p>
 
       {/* Title + quick facts */}
       <div className="mt-8 flex flex-wrap items-end justify-between gap-6">
         <div>
-          <p className="eyebrow">{brand.name} · {brand.country}</p>
+          <p className="eyebrow">{brand.name} · {t(brand.country)}</p>
           <h1 className="mt-2 text-3xl font-bold leading-tight sm:text-4xl">
             {car.model} <span className="text-primary">{car.generation}</span>
           </h1>
           <p className="mt-2 font-mono text-sm text-muted-foreground">
-            {years(car)} · {car.trim} · {car.body} · {car.fuel} · {car.era === "klassik" ? "Klassik" : "Yeni nəsil"}
+            {tv(years(car))} · {car.trim} · {t(car.body)} · {t(car.fuel)} · {t(car.era === "klassik" ? "Klassik" : "Yeni nəsil")}
           </p>
         </div>
         <Button variant={compared ? "glass" : "hero"} size="lg" onClick={() => toggle(car.id)}>
           {compared ? <Check /> : <GitCompareArrows />}
-          {compared ? "Müqayisədən çıxar" : "Müqayisəyə əlavə et"}
+          {t(compared ? "Müqayisədən çıxar" : "Müqayisəyə əlavə et")}
         </Button>
       </div>
 
@@ -119,8 +121,8 @@ export function CarDetail({ car }: { car: Car }) {
           ["Maksimal sürət", `${car.vmax} km/saat`],
         ].map(([l, v]) => (
           <div key={l} className="surface p-4">
-            <div className="font-display text-xl font-bold text-primary">{v}</div>
-            <div className="mt-1 text-xs text-muted-foreground">{l}</div>
+            <div className="font-display text-xl font-bold text-primary">{tv(v ?? "")}</div>
+            <div className="mt-1 text-xs text-muted-foreground">{t(l ?? "")}</div>
           </div>
         ))}
       </div>
@@ -130,13 +132,13 @@ export function CarDetail({ car }: { car: Car }) {
         <div className="grid gap-4 md:grid-cols-2">
           {SPEC_GROUPS.map((g) => (
             <section key={g.title} className="surface overflow-hidden">
-              <h2 className="border-b border-border bg-secondary/40 px-4 py-3 font-sans text-sm font-semibold">{g.title}</h2>
+              <h2 className="border-b border-border bg-secondary/40 px-4 py-3 font-sans text-sm font-semibold">{t(g.title)}</h2>
               <table className="w-full text-sm">
                 <tbody>
                   {g.rows.map((r) => (
                     <tr key={r.label} className="border-b border-border last:border-0">
-                      <th scope="row" className="w-2/5 px-4 py-2.5 text-left font-normal text-muted-foreground">{r.label}</th>
-                      <td className="px-4 py-2.5 text-right font-mono text-[13px] font-medium">{r.value(car)}</td>
+                      <th scope="row" className="w-2/5 px-4 py-2.5 text-left font-normal text-muted-foreground">{t(r.label)}</th>
+                      <td className="px-4 py-2.5 text-right font-mono text-[13px] font-medium">{t(tv(r.value(car)))}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -146,20 +148,21 @@ export function CarDetail({ car }: { car: Car }) {
         </div>
         <aside className="surface h-fit p-5 lg:sticky lg:top-20">
           <h2 className="flex items-center gap-2 font-sans text-base font-semibold">
-            <History className="h-4 w-4 text-primary" /> Qısa tarixçə
+            <History className="h-4 w-4 text-primary" /> {t("Qısa tarixçə")}
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{car.history}</p>
+          {lang !== "az" && <p className="mt-2 text-[11px] italic text-muted-foreground">{t("Tarixçə mətni Azərbaycan dilindədir.")}</p>}
           <dl className="mt-5 space-y-2 border-t border-border pt-4 text-sm">
-            <div className="flex justify-between gap-3"><dt className="text-muted-foreground">Marka</dt><dd>{brand.name}</dd></div>
-            <div className="flex justify-between gap-3"><dt className="text-muted-foreground">Mərkəz</dt><dd>{brand.hq}, {brand.country}</dd></div>
-            <div className="flex justify-between gap-3"><dt className="text-muted-foreground">Təsis ili</dt><dd className="font-mono">{brand.founded}</dd></div>
+            <div className="flex justify-between gap-3"><dt className="text-muted-foreground">{t("Marka")}</dt><dd>{brand.name}</dd></div>
+            <div className="flex justify-between gap-3"><dt className="text-muted-foreground">{t("Mərkəz")}</dt><dd>{t(brand.hq)}, {t(brand.country)}</dd></div>
+            <div className="flex justify-between gap-3"><dt className="text-muted-foreground">{t("Təsis ili")}</dt><dd className="font-mono">{brand.founded}</dd></div>
           </dl>
         </aside>
       </div>
 
       {siblings.length > 0 && (
         <section className="mt-14">
-          <h2 className="text-xl font-bold">{brand.name} — digər modellər</h2>
+          <h2 className="text-xl font-bold">{t("{b} — digər modellər", { b: brand.name })}</h2>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {siblings.map((c) => (
               <CarCard key={c.id} car={c} compared={compareIds.includes(c.id)} onToggleCompare={() => toggle(c.id)} />
