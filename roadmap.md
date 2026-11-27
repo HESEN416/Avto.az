@@ -5,4 +5,5 @@
 - [x] Kart → ayrıca avtomobil səhifəsi ("← Kataloqa qayıt")
 - [x] Ana səhifədə Hero altında tünd "Avto.az haqqında" bölməsi
 - [x] "Haqqımızda" bölməsi: 4 sütun silindi; sol = sayt haqqında məlumat + 3 ikon, sağ = Əlaqə bloku
-- [ ] Header: "Öz nömrəm" səhifəsi + AZ | EN | RU dil seçimi (bütün mətnlər)
+- [x] Header: "Öz nömrəm" səhifəsi + AZ | EN | RU dil seçimi (bütün mətnlər)
+- [x] "Öz nömrəm": ölkə seçimi (AZ/DE/US/TR/AE/JP), AZ lövhəsi tiresiz, dar şrift, kiçik çip

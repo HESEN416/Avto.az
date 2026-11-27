@@ -22,7 +22,7 @@ function PlatePage() {
   return (
     <>
       <PageIntro eyebrow={t("İnteraktiv alət")} title={t("Öz nömrəni yarat")}>
-        {t("Azərbaycan dövlət qeydiyyat nişanının vizualını yaradın və şəkil kimi yükləyin. Yalnız əyləncə və vizual məqsədlidir.")}
+        {t("Azərbaycan və digər ölkələrin qeydiyyat nişanı vizualını yaradın və şəkil kimi yükləyin. Yalnız vizual məqsədlidir.")}
       </PageIntro>
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
         <PlateBuilder />
